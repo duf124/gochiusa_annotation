@@ -16,11 +16,11 @@ def load_data():
     if os.path.exists(OUTPUT_FILE):
         #data = pd.read_csv(OUTPUT_FILE, encoding='cp932', low_memory=False)
         data = pd.read_csv(OUTPUT_FILE, encoding='utf-8', low_memory=False)
-        """if os.path.exists(REF_FILE):
-            ref_data = pd.read_csv(REF_FILE, encoding='cp932',
-            #ref_data = pd.read_csv(REF_FILE, encoding='utf-8',
+        if os.path.exists(REF_FILE):
+            #ref_data = pd.read_csv(REF_FILE, encoding='cp932',
+            ref_data = pd.read_csv(REF_FILE, encoding='utf-8',
                                    dtype={'volume': int, 'page': int, 'frame': int})
-            data = pd.concat([ref_data, data]).drop_duplicates("ID", keep="last").reset_index(drop=True)"""
+            data = pd.concat([ref_data, data]).drop_duplicates("ID", keep="last").reset_index(drop=True)
         return data#.reindex(columns=COLUMNS)
     elif os.path.exists(REF_FILE):
         #return pd.read_csv(REF_FILE, encoding='cp932',
