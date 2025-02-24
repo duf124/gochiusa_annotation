@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data annotation page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script defer src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script>
+      const initialData = {{ initial_data | tojson | safe }};
+      const initialValues = {
+          balloon_num: {{ balloon_num }},
+          outer_num: {{ outer_num }},
+          background_num: {{ background_num }},
+          character_num: {{ character_num }}
+      };
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="left">
+	<div class="progress">
+          <h3>Progress</h3>
+          <p>Step 1: {{ step1_progress }}%</p>
+          <p>Step 2: {{ step2_progress }}%</p>
+        </div>
+	
+        <h2 class="image-title">{{ image_name }}</h2>
+	<div class="image-wrapper">
+          <img class="image-display" src="{{ image }}" alt="Selected image">
+	</div>
+	
+	<div class="radio-buttons">
+          <fieldset>
+            <legend>balloon num</legend>
+            {% for i in range(0, 11) %}
+            <label>
+              <input type="radio" name="balloon_num" value="{{ i }}" {% if i == balloon_num %}checked{% endif %}>
+              {{ i }}
+            </label>
+            {% endfor %}
+          </fieldset>
+	  
+          <fieldset>
+            <legend>outer num</legend>
+            {% for i in range(0, 11) %}
+            <label>
+              <input type="radio" name="outer_num" value="{{ i }}" {% if i == outer_num %}checked{% endif %}>
+              {{ i }}
+            </label>
+            {% endfor %}
+          </fieldset>
+	  
+	  <fieldset>
+            <legend>background num</legend>
+            {% for i in range(0, 11) %}
+            <label>
+              <input type="radio" name="background_num" value="{{ i }}" {% if i == background_num %}checked{% endif %}>
+              {{ i }}
+            </label>
+            {% endfor %}
+          </fieldset>
+	  
+	  <fieldset>
+            <legend>character num</legend>
+            {% for i in range(0, 16) %}
+            <label>
+              <input type="radio" name="character_num" value="{{ i }}" {% if i == character_num %}checked{% endif %}>
+              {{ i }}
+            </label>
+            {% endfor %}
+          </fieldset>
+        </div>
+      </div>
+      
+      <div class="right">
+        <form method="POST" id="annotation-form">
+	  <input type="hidden" name="current_image" value="{{ image_name }}">
+
+	  <div class="form-container">
+	  <div class="shortcuts-container">
+            <div class="shortcuts">
+              <p><strong>character shortcuts 1:</strong></p>
+	      {% for word in ["ココア", "チノ", "リゼ", "千夜", "シャロ", "マヤ", "メグ", "フユ", "エル", "ナツメ", "ユラ", "青山", "凛", "モカ", ", "] %}
+              <button type="button" class="shortcut-button">{{ word }}</button>
+              {% endfor %}
+	      
+              <p><strong>character shortcuts 2:</strong></p>
+	      {% for word in ["ティッピー", "タカヒロ", "咲", "ココア父", "ココア母", "リゼ父", "黒服", "千夜祖母", "千鳥", "シャロ母", "メグ母"] %}
+              <button type="button" class="shortcut-button">{{ word }}</button>
+              {% endfor %}
+	      
+	      <p><strong>character shortcuts 3:</strong></p>
+	      {% for word in ["客", "あんこ", "ワイルドギース", "レイ", "カノ", "マイ", "杏", "なっちゃん", "ミキ", "カリン", "ポニテ", "ツインテ", "お団子", "ガチ恋お嬢様", "被服部部長", "フルール店長", "その他"] %}
+              <button type="button" class="shortcut-button">{{ word }}</button>
+              {% endfor %}
+	      
+	      <p><strong>sub shortcuts:</strong></p>
+	      {% for word in ["…", "♪", "♫", "♥", "゛", "゜", "“”", "{}", "ナレーション", "不定", "自身", "オノマトペ", "エモート", "例示"] %}
+              <button type="button" class="shortcut-button">{{ word }}</button>
+              {% endfor %}
+	      
+              <p><strong>shape shortcuts:</strong></p>
+	      {% for word in ["round", "peak", "rectangle", "pop", "distortion", "flush", "convex", "painted", "balloonless", "handwriting"] %}
+              <button type="button" class="shortcut-button">{{ word }}</button>
+              {% endfor %}
+	      
+	      <p><strong>face direction shortcuts:</strong></p>
+	      {% for word in ["L", "R", "A", "P", "S", "I", "LA", "RA", "LP", "RP", "LS", "RS", "LI", "RI", "AS", "AI", "PS", "PI"] %}
+              <button type="button" class="shortcut-button">{{ word }}</button>
+              {% endfor %}
+	      
+	      <p><strong>behavior shortcuts 1 自己接触:</strong></p>
+	      {% for word in ["髪", "頭", "後頭部", "顔", "目", "鼻", "頬", "口元", "顎", "肩", "肘", "胸", "腰", "膝", "背中", "身体", "に片手", "に両手", "を当てる", "を隠す", "を整える", "をいじる", "を抱きしめる", "腕を組む", "膝を抱える"] %}
+              <button type="button" class="shortcut-button">{{ word }}</button>
+              {% endfor %}
+	      
+	      <p><strong>behavior shortcuts 2 自己周囲:</strong></p>
+	      {% for word in ["頭上", "頭", "顔", "肩", "胸", "身体", "の前で", "の後ろで", "の横で", "の高さで", "片手", "両手", "指", "何か", "で何かを持つ", "で何かを抱える", "片腕", "両腕", "を曲げて", "を広げて", "何かに", "の前に", "の後ろに", "に片手", "に両手", "を伸ばす", "を出す", "を挙げる", "を置く", "を握る", "を乗せる", "を合わせる", "を構える", "を内側に向ける", "を開ける", "指を立てる", "11111", "11000", "01111", "01000", "01100", "00000", "扉を開ける", "肩に掛けたバッグを掴む"] %}
+              <button type="button" class="shortcut-button">{{ word }}</button>
+              {% endfor %}
+
+	      <p><strong>behavior shortcuts 3 対人対物:</strong></p>
+	      {% for word in ["誰かに", "自分に", "何かに", "誰かと", "誰かの", "手を差し出す", "指を差し出す", "指を差す", "手を振る", "手を組む", "抱きつく", "髪を触る"] %}
+              <button type="button" class="shortcut-button">{{ word }}</button>
+              {% endfor %}
+            </div>
+	  </div>
+
+	  <div class="dynamic-container">
+	    <div id="dynamic-forms">
+	      <!-- Forms generated by JavaScript -->
+            </div>
+	  </div>
+
+	  <div class="reliability-container">
+	    <div class="reliability-button">
+              <fieldset>
+		<legend>Annotation reliability</legend>
+		{% for i in range(0, 2) %}
+		<label>
+		  <input type="radio" name="reliability" value="{{ i }}" checked>
+		  {% if i == 0 %} not sure {% endif %}
+		  {% if i == 1 %} sure {% endif %}
+		</label>
+		{% endfor %}
+              </fieldset>
+	    </div>
+	    
+	    <div class="submit-group">
+              <button type="submit">Submit</button>
+            </div>
+	  </div>
+	  </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
