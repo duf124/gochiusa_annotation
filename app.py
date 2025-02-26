@@ -17,8 +17,8 @@ def load_data():
         #data = pd.read_csv(OUTPUT_FILE, encoding='cp932', low_memory=False)
         data = pd.read_csv(OUTPUT_FILE, encoding='utf-8', low_memory=False)
         if os.path.exists(REF_FILE):
-            #ref_data = pd.read_csv(REF_FILE, encoding='cp932',
-            ref_data = pd.read_csv(REF_FILE, encoding='utf-8',
+            #ref_data = pd.read_csv(REF_FILE, encoding='cp932', low_memory=False,
+            ref_data = pd.read_csv(REF_FILE, encoding='utf-8', low_memory=False,
                                    dtype={'volume': int, 'page': int, 'frame': int})
             data = pd.concat([ref_data, data]).drop_duplicates("ID", keep="last").reset_index(drop=True)
         return data#.reindex(columns=COLUMNS)
@@ -107,8 +107,13 @@ def index():
     
     selected_image = image_paths[image_names.index(random.choice(remaining_images))]
     image_name = os.path.splitext(os.path.basename(selected_image))[0]
+    current_idx = image_names.index(image_name)
     print(selected_image)
     print(image_name)
+    prev_image = image_paths[current_idx - 1]
+    next_image = image_paths[(current_idx + 1) % (len(image_paths) - 1)]
+    print(prev_image)
+    print(next_image)
 
     # Get initial data
     existing_row = data[data["ID"] == image_name].iloc[0] if not data[data["ID"] == image_name].empty else pd.Series()
@@ -121,7 +126,11 @@ def index():
     print(balloon_num, outer_num, background_num, character_num)
     #print(initial_data)
     
-    return render_template("base.html", image=selected_image, image_name=image_name,
+    return render_template("base.html",
+                           current_image=selected_image,
+                           image_name=image_name,
+                           prev_image=prev_image,
+                           next_image=next_image,
                            initial_data=initial_data, balloon_num=balloon_num,
                            outer_num=outer_num, background_num=background_num, character_num=character_num,
                            step1_progress=step1_progress, step2_progress=step2_progress)
