@@ -130,4 +130,47 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initial setup
     setInitialRadios();
     updateAllForms();
+
+    // --- Image Navigation Code ---
+    let navState = "current";  // possible states: "prev", "current", "next"
+    const prevButton = document.getElementById("prev-button");
+    const nextButton = document.getElementById("next-button");
+    const displayedImage = document.getElementById("displayed-image");
+
+    function updateNavButtons() {
+        if (navState === "current") {
+            prevButton.style.display = "block";
+            nextButton.style.display = "block";
+        } else if (navState === "prev") {
+            prevButton.style.display = "none";
+            nextButton.style.display = "block";
+        } else if (navState === "next") {
+            prevButton.style.display = "block";
+            nextButton.style.display = "none";
+        }
+    }
+
+    prevButton.addEventListener("click", () => {
+        if (navState === "current") {
+            navState = "prev";
+            displayedImage.src = prevImage;
+        } else if (navState === "next") {
+            navState = "current";
+            displayedImage.src = currentImage;
+        }
+        updateNavButtons();
+    });
+
+    nextButton.addEventListener("click", () => {
+        if (navState === "current") {
+            navState = "next";
+            displayedImage.src = nextImage;
+        } else if (navState === "prev") {
+            navState = "current";
+            displayedImage.src = currentImage;
+        }
+        updateNavButtons();
+    });
+
+    updateNavButtons();
 });
