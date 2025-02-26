@@ -39,14 +39,36 @@ html, body {
 }
 
 .image-wrapper {
-    margin: 20px 0;
-    text-align: center;
+    /*margin: 20px 0;
+    text-align: center;*/
+    position: relative;
 }
 
 .image-display {
     max-width: 100%;
     max-height: 400px;
     border: 1px solid #ddd;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    z-index: 10;
+    padding: 5px;
+    color: #333;
+}
+
+.left-nav {
+    left: 5px;
+}
+
+.right-nav {
+    right: 5px;
 }
 
 .radio-buttons {
